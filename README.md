@@ -52,9 +52,6 @@ También puedes ver:
 
 Borrar datos del sitio (o usar otra ventana de incógnito) elimina cuentas y materiales de **ese** navegador. No hay sincronización entre dispositivos.
 
-## Cómo añadir / activar la IA
-
-La IA **ya está integrada** de forma opcional (`js/core/ai.js`). No hace falta otro lenguaje: el navegador habla directo con el proveedor.
 
 ### Pasos en la interfaz
 
@@ -69,12 +66,6 @@ La IA **ya está integrada** de forma opcional (`js/core/ai.js`). No hace falta 
    - (Opcional) **Probar conexión**.
 4. Abre una lección y usa el **Tutor NexIA**: si la IA está bien configurada, responde con el modelo; si falla o no hay clave, usa el **tutor local**.
 
-### Dónde conseguir una clave (ejemplos)
-
-- [OpenAI](https://platform.openai.com/) → API keys  
-- [Groq](https://console.groq.com/) → API keys (suele tener cuota gratuita)  
-- [OpenRouter](https://openrouter.ai/) → varias modelos con una sola clave  
-- **Ollama** en tu PC: instala Ollama, corre un modelo y usa URL `http://127.0.0.1:11434/v1` (sin clave real o con un valor cualquiera según tu setup)
 
 ### Qué se envía al proveedor
 
@@ -98,10 +89,3 @@ Valida la extracción de PDF/DOCX/TXT y el analizador con documentos sintéticos
 - `js/app/` — interfaz, estado, vistas y enrutador (`#/inicio`, `#/explorar`, `#/espacios`, …)
 - Perfil: solo desde el menú de la esquina superior derecha (ya no está en el lateral)
 - `css/` — estilos globales, app y extensiones (modo oscuro, toasts, IA)
-
-## Límites honestos
-
-- El análisis del documento es **local y determinista** (no es un LLM).
-- Los PDF escaneados (solo imagen) o cifrados no se pueden leer; usa pegar texto.
-- Las cuentas no son un login de servidor: viven en **este dispositivo y navegador**.
-- El correo de registro/login debe ser **@gmail.com** (la cuenta demo es la excepción).
