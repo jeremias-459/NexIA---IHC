@@ -3,12 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inicia sesión o crea tu cuenta local en NexIA para estudiar con tus propios materiales.">
   <title>Iniciar sesión — NexIA</title>
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/app-extra.css">
+  <script>
+    try {
+      var raw = localStorage.getItem('nexia:session') || sessionStorage.getItem('nexia:session');
+      var session = raw ? JSON.parse(raw) : null;
+      if (session && session.userId) location.replace('app.html');
+    } catch (err) { /* la comprobación completa ocurre al cargar auth.js */ }
+  </script>
 </head>
 <body class="auth-body">
   <a href="#contenido-principal" class="skip-link">Saltar al contenido</a>
@@ -32,60 +41,70 @@
             de comprender.
           </h2>
           <p class="auth-promo__desc">
-            Retoma tus contenidos, resuelve dudas y sigue avanzando a tu ritmo.
+            Sube tus apuntes, genera práctica y refuerza lo que más te cuesta — todo en este dispositivo.
           </p>
 
           <div class="auth-promo__box">
             <div class="auth-promo__item">
               <h2 class="auth-promo__item-title">Antes de clase</h2>
-              <p class="auth-promo__item-sub">Micromódulos breves + tutor IA</p>
+              <p class="auth-promo__item-sub">Micromódulos breves + tutor</p>
             </div>
             <hr class="auth-promo__divider">
             <div class="auth-promo__item">
               <h2 class="auth-promo__item-title">Después de clase</h2>
-              <p class="auth-promo__item-sub">Desafíos y refuerzo personalizado</p>
+              <p class="auth-promo__item-sub">Repaso programado y autoevaluación</p>
             </div>
           </div>
         </section>
 
         <div class="auth-column-right">
-          <section class="auth-card" aria-labelledby="loginHeading">
+          <section class="auth-card" aria-labelledby="authTitle">
             <p class="auth-card__eyebrow">BIENVENIDO A NEXIA</p>
-            <h1 class="auth-card__title" id="loginHeading">Inicia sesión</h1>
-            <p class="auth-card__subtitle">Accede con tu correo institucional.</p>
+            <h1 class="auth-card__title" id="authTitle">Inicia sesión</h1>
+            <p class="auth-card__subtitle" id="authSubtitle">Accede a tu espacio de estudio en este dispositivo.</p>
 
-            <form class="auth-form" id="loginForm">
+            <div class="auth-tabs" role="tablist" aria-label="Modo de acceso">
+              <button type="button" class="auth-tab is-active" id="modeLogin" role="tab" aria-selected="true">Iniciar sesión</button>
+              <button type="button" class="auth-tab" id="modeRegister" role="tab" aria-selected="false">Crear cuenta</button>
+            </div>
+
+            <div class="auth-error" id="authError" role="alert" hidden></div>
+
+            <form class="auth-form" id="authForm" novalidate>
+              <div class="form-group" id="nameGroup" hidden>
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" id="name" name="name" class="form-input" autocomplete="name" placeholder="Cómo quieres que te llamemos">
+              </div>
+
               <div class="form-group">
-                <label for="email" class="form-label">Correo institucional</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  class="form-input"
-                  placeholder="tu.correo@universidad.edu"
-                  required
-                >
+                <label for="email" class="form-label">Correo</label>
+                <input type="email" id="email" name="email" class="form-input" autocomplete="email" placeholder="tunombre@gmail.com" pattern="[^@\s]+@gmail\.com" title="Usa un correo @gmail.com" required>
               </div>
 
               <div class="form-group">
                 <label for="password" class="form-label">Contraseña</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  class="form-input"
-                  placeholder="Ingresa tu contraseña"
-                  required
-                >
+                <div class="password-field">
+                  <input type="password" id="password" name="password" class="form-input" autocomplete="current-password" placeholder="Mínimo 8 caracteres, con letras y números" required>
+                  <button type="button" class="password-field__toggle" id="togglePassword" aria-label="Mostrar contraseña">Mostrar</button>
+                </div>
               </div>
 
               <div class="auth-actions">
-                <button type="submit" class="auth-btn auth-btn--primary">Iniciar sesión</button>
-                <button type="button" class="auth-btn auth-btn--secondary">¿Necesitas ayuda para ingresar?</button>
+                <button type="submit" class="auth-btn auth-btn--primary" id="authSubmit">Iniciar sesión</button>
+                <button type="button" class="auth-btn auth-btn--secondary" id="authHelpBtn">¿Necesitas ayuda?</button>
               </div>
             </form>
 
-            <p class="auth-card__footnote">Usa las credenciales de tu institución.</p>
+            <button type="button" class="auth-btn auth-btn--secondary auth-demo-btn" id="demoBtn">Entrar con cuenta demo</button>
+
+            <div class="auth-help" id="authHelp" hidden>
+              Las cuentas de NexIA viven en <strong>este navegador</strong>: no hay servidor de usuarios.
+              El correo debe ser <strong>@gmail.com</strong>.
+              Si olvidas la contraseña y no puedes recuperarla, crea una cuenta nueva o usa la demo.
+              Para probar sin registrarte, pulsa «Entrar con cuenta demo».
+            </div>
+
+            <p class="auth-card__footnote">Tus materiales y progreso se guardan solo en este dispositivo.</p>
           </section>
 
           <p class="auth-caption">NexIA · Aprender, comprender, avanzar.</p>
@@ -94,6 +113,9 @@
     </div>
   </main>
 
-  <script src="js/main.js"></script>
+  <script src="js/core/utils.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/core/auth.js"></script>
+  <script src="js/login.js"></script>
 </body>
 </html>
